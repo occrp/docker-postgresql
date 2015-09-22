@@ -1,6 +1,6 @@
 # PostgreSQL 9.4 docker image
 
-A PostgreSQL docker image that supports keeping data and config in separated directories. Currently the relevant directories are hard-coded to:
+A PostgreSQL docker image that supports keeping data and config in separate directories. Currently the relevant directories are hard-coded to:
  - data: `/var/lib/postgresql`
  - config: `etc/postgresql`
  - logfiles: `/var/log/postgres`
