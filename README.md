@@ -26,6 +26,7 @@ Licensed under [GNU Affero GPL](https://gnu.org/licenses/agpl.html).
 
 # TODO
 
+ - `pg_hba` - by default accept *only* connections from `172.17.0.0/24`
  - more complete documentation
  - support for keeping the config *within* the cluster directory
  - more configuration `ENV` vars (data directory, config directory, socket directory, etc)

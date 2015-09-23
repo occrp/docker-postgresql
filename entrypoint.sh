@@ -153,13 +153,33 @@ else
     
     # db -- set it up?
     if [ -z ${POSTGRES_DB+x} ] || [ "$POSTGRES_DB" = "postgres" ]; then
-        echo "...no database will be set-up, remember to set one up before usage!"
+        # make sure we have a default database name (yes, it's there, created by default by postgresql)
+        export POSTGRES_DB='postgres'
+        # inform
+        echo "...no database will be set-up (apart from the default database 'postgres'), remember to set one up before usage!"
     
     # actually, yes, set it up
     else
         export POSTGRES_DB
         echo "...POSTGRESS_DB set, setting up a database: '$POSTGRES_DB'"
         su -c "psql --username postgres -c \"CREATE DATABASE $POSTGRES_DB;\"" postgres
+    fi
+    
+    echo
+    if [ -s /docker-entrypoint-initdb.d/* ]; then
+        echo "running scripts from /docker-entrypoint-initdb.d/..."
+        for f in /docker-entrypoint-initdb.d/*; do
+            case "$f" in
+                # run any shell script found, as root
+                *.sh)  echo "+-- $0: running $f"; . "$f" ;;
+                # run any SQL scripts found, as superuser postgres and by default on the $POSTGRES_DB database
+                # scripts can use USE "databasename"; to switch databases
+                *.sql) echo "+-- $0: running $f"; su -c "psql --username \"postgres\" --dbname \"$POSTGRES_DB\"" postgres < "$f" && echo ;;
+                # ignoring anything else
+                *)     echo "+-- $0: ignoring $f" ;;
+            esac
+            echo
+        done
     fi
     
     su -c "/usr/lib/postgresql/9.4/bin/pg_ctl -D \"/etc/postgresql\" -m fast -w stop" postgres
