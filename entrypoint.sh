@@ -32,15 +32,15 @@ if [ -s /var/lib/postgresql/PG_VERSION ]; then
     echo "Cluster found!"
     
     if [ ! -z ${POSTGRES_PASSWORD+x} ]; then
-        echo "...POSTGRESS_PASSWORD ignored, cluster exists"
+        echo "...POSTGRES_PASSWORD ignored, cluster exists"
     fi
     
     if [ ! -z ${POSTGRES_USER+x} ]; then
-        echo "...POSTGRESS_USER ignored, cluster exists"
+        echo "...POSTGRES_USER ignored, cluster exists"
     fi
     
     if [ ! -z ${POSTGRES_DB+x} ]; then
-        echo "...POSTGRESS_DB ignored, cluster exists"
+        echo "...POSTGRES_DB ignored, cluster exists"
     fi
 
     # do we have config?
@@ -156,7 +156,7 @@ else
     # pw
     if [ -z ${POSTGRES_PASSWORD+x} ]; then
         POSTGRES_PASSWORD="$( dd status=none bs=1 count=16 if=/dev/random  | sha256sum | cut -d ' ' -f 1 )"
-        echo "...POSTGRESS_PASSWORD not set, using '$POSTGRES_PASSWORD' (change immediately!)"
+        echo "...POSTGRES_PASSWORD not set, using '$POSTGRES_PASSWORD' (change immediately!)"
     fi
     
     # create/modify the user
@@ -176,7 +176,7 @@ else
     # actually, yes, set it up
     else
         export POSTGRES_DB
-        echo "...POSTGRESS_DB set, setting up a database: '$POSTGRES_DB'"
+        echo "...POSTGRES_DB set, setting up a database: '$POSTGRES_DB'"
         su -c "psql --username postgres -c \"CREATE DATABASE $POSTGRES_DB;\"" postgres
     fi
     
